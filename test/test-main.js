@@ -11,13 +11,6 @@ requirejs.config({
 
     paths: {
         'jquery': '../lib/jquery',
-        'underscore': '../lib/underscore',
-    },
-
-    shim: {
-        'underscore': {
-            exports: '_'
-        }
     },
 
     // ask Require.js to load these files (all our tests)
