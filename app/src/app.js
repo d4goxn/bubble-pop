@@ -1,13 +1,12 @@
-define(function() {
+define(['game'], function(Game) {
+  'use strict';
 
-    var App = function(el) {
-        this.el = el;
-    };
+  var App = function(canvas) {
 
-    App.prototype.render = function() {
-        this.el.html('require.js up and running');
-    };
+    this.game = new Game();
+    this.game.bindView(canvas);
+  };
 
-    return App;
+  return App;
 
 });

@@ -1,16 +1,15 @@
 define(['app', 'jquery'], function(App, $) {
 
-    describe('just checking', function() {
+  describe('just checking', function() {
 
-        it('works for app', function() {
-            var el = $('<div></div>');
+    it('has got game', function() {
 
-            var app = new App(el);
-            app.render();
+      var $display = $('<canvas id="display"></canvas>');
+      var app = new App($display);
 
-            expect(el.text()).toEqual('require.js up and running');
-        });
-
+      expect(app.game).toBeDefined();
     });
+
+  });
 
 });

@@ -3,7 +3,7 @@ define(['bubble', 'jquery'], function(bubbleFactory, $) {
 
   describe('bubbleFactory', function() {
 
-    var game, origin, Bubble;
+    var game, origin, Bubble, bubble;
 
     beforeEach(function() {
 
@@ -17,30 +17,29 @@ define(['bubble', 'jquery'], function(bubbleFactory, $) {
           width: 1000,
           height: 1000
         },
-        time: Math.PI
+        time: 0
       };
 
       Bubble = new bubbleFactory(game);
+      bubble = new Bubble(origin);
+
     });
 
     it('can create a bubble', function() {
 
-      var bubble = new Bubble(origin);
-
       expect(bubble).toBeDefined();
+
     });
 
     it('has sane parameters', function() {
 
-      var bubble = new Bubble(origin);
-
       expect(bubble.origin).toEqual(origin);
       expect(bubble.birth).toEqual(game.time);
+
     });
 
     it('moves over time', function() {
-      
-      var bubble = new Bubble(origin);
+
       var x = bubble.x;
       var y = bubble.y;
 
@@ -48,6 +47,7 @@ define(['bubble', 'jquery'], function(bubbleFactory, $) {
 
       expect(bubble.x).not.toEqual(x);
       expect(bubble.y).not.toEqual(y);
-    })
+
+    });
   });
 });
