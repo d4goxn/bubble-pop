@@ -6,13 +6,25 @@ define(function() {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
 
+    var self = this;
+    this.bounds = {
+      get width() {
+        return self.canvas.width;
+      },
+
+      get height() {
+        return self.canvas.height;
+      }
+    };
+
   }
 
   Renderer.prototype = {
 
     renderFrame: function(objects) {
 
-      this.ctx.clearRect(0, 0, this.bounds.width, this.bounds.height);
+      this.ctx.fillStyle = '#aaf';
+      this.ctx.fillRect(0, 0, this.bounds.width, this.bounds.height);
 
       for(var objectId in objects)
         this.renderObject(objects[objectId]);
@@ -23,16 +35,6 @@ define(function() {
 
       this.ctx.drawImage(object.image, object.x, object.y);
 
-    },
-
-    bounds: {
-      get width() {
-        return this.canvas.width;
-      },
-
-      get height() {
-        return this.canvas.height;
-      }
     }
 
   };
