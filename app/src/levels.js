@@ -4,37 +4,11 @@ define(['jquery'], function($) {
   return {
 
     query: function() {
-
-      var onSuccess;
-      var promise = {
-        success: function(callback) {
-          onSuccess = callback;
-        }
-      };
-
-      $.get('data/levels.json')
-      .success(function(data) {
-        onSuccess(data);
-      });
-
-      return promise;
+      return $.get('data/levels.json');
     },
 
     load: function(name) {
-
-      var onSuccess;
-      var promise = {
-        success: function(callback) {
-          onSuccess = callback;
-        }
-      };
-
-      $.get('data/' + name + '.json')
-      .success(function(data) {
-        onSuccess(data);
-      });
-
-      return promise;
+      return $.get('data/' + name + '.json');
     }
   };
 });
