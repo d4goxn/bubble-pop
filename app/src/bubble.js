@@ -1,12 +1,15 @@
 define([], function() {
   'use strict';
 
-  function bubbleFactory (game) {
+  function bubbleFactory(game, bounds) {
 
-    function Bubble (origin) {
+    function Bubble(origin, imageUrl) {
 
       this.birth = game.time;
-      this.origin = origin;
+      this.origin = origin; // starting position
+      this.image = new Image();
+      this.image.src = imageUrl;
+
     }
 
     Bubble.prototype = {
@@ -18,15 +21,15 @@ define([], function() {
       get x() {
         // Drift from side to side.
 
-        var bounds = [
+        var effectiveBounds = [
           this.radius,
-          game.boundary.width - this.radius
+          bounds.width - this.radius
         ]; // maximum horizontal distance
 
-        var phaseOffset = (this.origin.x - bounds[0]) / bounds[1];
+        var phaseOffset = (this.origin.x - effectiveBounds[0]) / effectiveBounds[1];
         var value = Math.sin(game.time * this.swingRate + phaseOffset) * 0.5 + 0.5; // 0 to 1, side to side
-        var range = bounds[1] - bounds[0];
-        var offset = bounds[0];
+        var range = effectiveBounds[1] - effectiveBounds[0];
+        var offset = effectiveBounds[0];
 
         return value * range + offset;
       },
