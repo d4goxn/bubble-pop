@@ -10,7 +10,8 @@ define(['app', 'levels', 'bubble', 'jquery'], function (App, levels, bubbleFacto
   var app = new App($('#display')[0]);
   var Bubble = bubbleFactory(app.game, app.renderer.bounds);
 
-  levels.load('level1', function(level) {
+  levels.load('level1')
+  .success(function(level) {
 
     app.title = level.name;
 
@@ -20,9 +21,9 @@ define(['app', 'levels', 'bubble', 'jquery'], function (App, levels, bubbleFacto
     };
 
     var bubble = new Bubble(origin, 'images/' + level.associations[0].question.image);
-    app.spawn(bubble);
+    app.game.spawn(bubble);
 
-    app.game.start();
+    app.game.start(app.renderer);
   });
 
 });
