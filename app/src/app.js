@@ -1,10 +1,11 @@
-define(['game'], function(Game) {
+define(['game', 'canvasRenderer'], function(Game, Renderer) {
   'use strict';
 
   var App = function(canvas) {
 
     this.game = new Game();
-    this.game.bindView(canvas);
+    this.renderer = new Renderer(canvas);
+
   };
 
   return App;
