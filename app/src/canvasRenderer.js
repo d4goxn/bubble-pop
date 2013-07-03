@@ -12,7 +12,7 @@ define(function() {
 
     renderFrame: function(objects) {
 
-      this.ctx.clearRect();
+      this.ctx.clearRect(0, 0, this.bounds.width, this.bounds.height);
 
       for(var objectId in objects)
         this.renderObject(objects[objectId]);
