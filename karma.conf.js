@@ -13,8 +13,8 @@ files = [
   REQUIRE,
   REQUIRE_ADAPTER,
 
-  {pattern: 'lib/**/*.js', included: false},
-  {pattern: 'src/**/*.js', included: false},
+  {pattern: 'app/lib/**/*.js', included: false},
+  {pattern: 'app/src/**/*.js', included: false},
   {pattern: 'test/**/*Spec.js', included: false},
 
   'test/test-main.js',
@@ -23,7 +23,7 @@ files = [
 
 // list of files to exclude
 exclude = [
-    'src/main.js'
+    'app/src/main.js'
 ];
 
 
