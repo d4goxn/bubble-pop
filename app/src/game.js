@@ -11,12 +11,12 @@ define(function() {
 
   Game.prototype = {
 
-    start: function() {
+    start: function(renderer) {
     
       console.log("Running");
       this.running = true;
 
-      this.animate();
+      this.animate(renderer);
     },
 
     spawn: function(object) {
@@ -29,13 +29,15 @@ define(function() {
 
     animate: function(renderer) {
 
+      var game = this;
+
       function animate() {
 
-        if(!this.running) return;
-        this.removeExpiredObjects();
-        renderer.renderFrame(this.objects);
+        if(!game.running) return;
+        game.removeExpiredObjects();
+        renderer.renderFrame(game.objects);
 
-        requestAnimationFrame(step);
+        requestAnimationFrame(animate);
       }
 
       animate();
