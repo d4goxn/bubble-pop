@@ -6,16 +6,10 @@ define(function() {
     this.running = false;
     this.objects = {}; // id -> object model
     this.birth = Date.now() * 0.001;
+
   }
 
   Game.prototype = {
-
-    bindView: function(element) {
-
-      this.canvas = element;
-    
-      return this;
-    },
 
     start: function() {
     
@@ -33,16 +27,28 @@ define(function() {
       return id;
     },
 
-    animate: function() {
+    animate: function(renderer) {
 
-      if(!this.running) return;
+      function animate() {
+
+        if(!this.running) return;
+        this.removeExpiredObjects();
+        renderer.renderFrame(this.objects);
+
+        requestAnimationFrame(step);
+      }
+
+      animate();
+    },
+
+    removeExpiredObjects: function() {
 
       var expiredObjectIds = [];
 
       for(var objectId in this.objects) {
         var object = this.objects[objectId];
 
-        if(object.model.expired)
+        if(object.expired)
           expiredObjectIds.push(objectId);
       }
 
@@ -50,8 +56,6 @@ define(function() {
         var id = expiredObjectIds.pop();
         delete(this.objects[id]);
       }
-
-      requestAnimationFrame(this.animate);
     },
 
     createId: (function() {
@@ -65,7 +69,7 @@ define(function() {
 
     get time() {
       return Date.now() * 0.001 - this.birth;
-    }
+    },
   };
 
   return Game;
