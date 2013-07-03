@@ -1,24 +1,40 @@
-define(function() {
+define(['jquery'], function($) {
   'use strict';
 
   return {
 
-    queryLevels: function(ready) {
-    
+    query: function() {
+
+      var onSuccess;
+      var promise = {
+        success: function(callback) {
+          onSuccess = callback;
+        }
+      };
+
       $.get('data/levels.json')
       .success(function(data) {
-        ready(JSON.parse(data));
+        onSuccess(data);
       });
 
+      return promise;
     },
 
-    loadLevel: function(name, ready) {
+    load: function(name) {
+
+      var onSuccess;
+      var promise = {
+        success: function(callback) {
+          onSuccess = callback;
+        }
+      };
 
       $.get('data/' + name + '.json')
       .success(function(data) {
-        ready(JSON.parse(data));
+        onSuccess(data);
       });
 
+      return promise;
     }
   };
 });
