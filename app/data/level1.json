@@ -1,0 +1,14 @@
+{
+  "name": "Pop a Bubble",
+  "associations": [
+    {
+      "name": "Bubble",
+      "question": {
+        "image": "bubble.png"
+      },
+      "answer": {
+        "image": "pop.png"
+      }
+    }
+  ]
+}
