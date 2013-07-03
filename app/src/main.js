@@ -1,10 +1,12 @@
 requirejs.config({
-    paths: {
-        'jquery': '../lib/jquery',
-    }
+  paths: {
+    'jquery': '../lib/jquery'
+  }
 });
 
 define(['app', 'jquery'], function (App, $) {
-    var app = new App($('body'));
-    app.render();
+  'use strict';
+
+  var app = new App($('#display')[0]);
+
 });
