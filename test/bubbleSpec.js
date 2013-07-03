@@ -3,7 +3,7 @@ define(['bubble', 'jquery'], function(bubbleFactory, $) {
 
   describe('bubbleFactory', function() {
 
-    var game, origin, Bubble, bubble;
+    var game, bounds, origin, Bubble, bubble;
 
     beforeEach(function() {
 
@@ -13,14 +13,15 @@ define(['bubble', 'jquery'], function(bubbleFactory, $) {
       };
 
       game = {
-        boundary: {
-          width: 1000,
-          height: 1000
-        },
         time: 0
       };
 
-      Bubble = new bubbleFactory(game);
+      bounds = {
+        width: 1000,
+        height: 1000
+      };
+
+      Bubble = bubbleFactory(game, bounds);
       bubble = new Bubble(origin);
 
     });
