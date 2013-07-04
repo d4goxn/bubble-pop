@@ -4,10 +4,10 @@ define(['time'], function (time) {
   function SineCtrl(amplitude, frequency, offset, phase) {
 
     this.birth = time.now();
-    this.amplitude = amplitude;
-    this.frequency = frequency;
-    this.offset = offset;
-    this.phase = phase;
+    this.amplitude = amplitude || 1;
+    this.frequency = frequency || 1;
+    this.offset = offset || 0;
+    this.phase = phase || 0;
 
   }
 
