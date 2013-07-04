@@ -15,9 +15,13 @@ define(['promise-simple', 'jquery'], function (Promise, $) {
 
   var ctx = canvas.getContext('2d');
 
+  function now() {
+    return Date.now() * 0.001;
+  }
+
   function LinearMotion(scale, offset) {
 
-    this.birth = Date.now();
+    this.birth = now();
     this.offset = offset;
     this.scale = scale;
 
@@ -25,18 +29,35 @@ define(['promise-simple', 'jquery'], function (Promise, $) {
 
   LinearMotion.prototype = {
     get value() {
-      return this.scale * (Date.now() - this.birth) + this.offset;
+      var time = now() - this.birth;
+      return this.scale * time + this.offset;
     }
   };
 
-  var bubbleRise = new LinearMotion(-0.025, canvas.height + 25);
+  function SineMotion(range, scale, phase) {
+
+    this.birth = now();
+    this.range = range;
+    this.scale = scale;
+    this.phase = phase;
+
+  }
+
+  SineMotion.prototype = {
+    get value() {
+      var time = now() - this.birth;
+      return this.range * Math.sin(time * this.scale) + this.phase;
+    }
+  };
+
+  var bubbleRise = new LinearMotion(-5, canvas.height + 0);
+  var bubbleSwing = new SineMotion(100, 0.25, 0);
 
   var bubble = {
+
     image: new Image(),
-    x: 100,
-
+    get x() { return bubbleSwing.value; },
     get y() { return bubbleRise.value; },
-
     width: 0,
     height: 0,
 
