@@ -4,8 +4,8 @@ define(['time'], function (time) {
   function LinearCtrl(scale, offset) {
 
     this.birth = time.now();
-    this.offset = offset;
-    this.scale = scale;
+    this.scale = scale || 1;
+    this.offset = offset || 0;
 
   }
 
