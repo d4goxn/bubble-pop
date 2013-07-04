@@ -5,7 +5,7 @@ requirejs.config({
   }
 });
 
-define(['bubble', 'promise-simple', 'jquery'], function (Bubble, Promise, $) {
+define(['bubble', 'popout', 'promise-simple', 'jquery'], function (Bubble, Popout, Promise, $) {
   'use strict';
 
   var $canvas = $('canvas#display');
@@ -52,7 +52,7 @@ define(['bubble', 'promise-simple', 'jquery'], function (Bubble, Promise, $) {
         ctx.drawImage(
           sprite.image,
           sprite.x, sprite.y,
-          sprite.width, sprite.height
+          sprite.image.width, sprite.image.height
         );
       }
 
@@ -118,18 +118,29 @@ define(['bubble', 'promise-simple', 'jquery'], function (Bubble, Promise, $) {
     },
 
     pop: function(bubble) {
-      console.log('A bubble popped.');
       delete this.sprites[bubble.id];
+
+      var position = {
+        x: bubble.x,
+        y: bubble.y
+      };
+
+      this.add(new Popout(position, popImage));
+      console.log('A bubble popped.');
     }
   };
 
-  var image = new Image();
+  var bubbleImage = new Image();
+  var popImage = new Image();
 
   // Wait for the image to load, then create the game objects and start animating.
-  Promise.when(imageWaiter(image)).then(function() {
+  Promise.when(
+    imageWaiter(bubbleImage),
+    imageWaiter(popImage)
+  ).then(function() {
     
     var scene = new Scene();
-    var bubble = new Bubble(bounds, image, function(bubble) {
+    var bubble = new Bubble(bounds, bubbleImage, function(bubble) {
       scene.pop(bubble);
     });
 
@@ -142,6 +153,7 @@ define(['bubble', 'promise-simple', 'jquery'], function (Bubble, Promise, $) {
     animate(scene);
   });
 
-  image.src = 'images/bubble.png';
+  bubbleImage.src = 'images/bubble.png';
+  popImage.src = 'images/pop.png';
 
 });
