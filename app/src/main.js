@@ -5,7 +5,7 @@ requirejs.config({
   }
 });
 
-define(['linearCtrl', 'sineCtrl', 'promise-simple', 'jquery'], function (LinearCtrl, SineCtrl, Promise, $) {
+define(['bubble', 'promise-simple', 'jquery'], function (Bubble, Promise, $) {
   'use strict';
 
   var canvas = $('canvas#display')[0];
@@ -15,69 +15,64 @@ define(['linearCtrl', 'sineCtrl', 'promise-simple', 'jquery'], function (LinearC
 
   var ctx = canvas.getContext('2d');
 
-  var bubbleRise = new LinearCtrl(-5, canvas.height - 100);
-  var bubbleSwing = new SineCtrl(canvas.width * 0.25, 0.25, canvas.width * 0.5);
-
-  var bubble = {
-
-    image: new Image(),
-    get x() { return bubbleSwing.value; },
-    get y() { return bubbleRise.value; },
-    width: 0,
-    height: 0,
-
-    render: function(ctx) {
-
-      ctx.drawImage(
-        bubble.image,
-        bubble.x, bubble.y,
-        bubble.width, bubble.height
-      );
-
-    }
+  var bounds = {
+    get width() { return canvas.width; },
+    get height() { return canvas.height; },
   };
 
-  function waitForImage() {
 
-    var deferred = Promise.defer();
+  // Returns a function that will resolve a waiting promise when an image has loaded.
+  function imageWaiter(image) {
+    return function() {
 
-    bubble.image.onload = function() {
+      var deferred = Promise.defer();
 
-      bubble.width = bubble.image.width;
-      bubble.height = bubble.image.height;
+      image.onload = function() {
+        deferred.resolve();
+      };
 
-
-      deferred.resolve();
-
+      return deferred;
     };
-
-    return deferred;
   }
-
-  bubble.image.src = 'images/bubble.png';
-
 
   var running = true;
 
-  function animate() {
+  function animate(sprites) {
+    function loop() {
 
-    if(!running) return;
+      if(!running) return;
 
-    ctx.fillStyle = '#aaf';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#aaf';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.drawImage(
-      bubble.image,
-      bubble.x, bubble.y,
-      bubble.width, bubble.height
-    );
+      for(var spriteId in sprites) {
+        var sprite = sprites[spriteId];
 
-    requestAnimationFrame(animate);
+        ctx.drawImage(
+          sprite.image,
+          sprite.x, sprite.y,
+          sprite.width, sprite.height
+        );
+      }
+
+      requestAnimationFrame(loop);
+    }
+
+    loop();
   }
 
-  Promise.when(waitForImage).then(function() {
+  var image = new Image();
+
+  // Wait for the image to load, then create the game objects and start animating.
+  Promise.when(imageWaiter(image)).then(function() {
     
-    animate();
+    var bubble = new Bubble(bounds, image);
+
+    animate({
+      0: bubble
+    });
   });
+
+  image.src = 'images/bubble.png';
 
 });
