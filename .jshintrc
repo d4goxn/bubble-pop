@@ -5,7 +5,6 @@
   "esnext": true,
   "bitwise": true,
   "camelcase": true,
-  "curly": true,
   "eqeqeq": true,
   "immed": true,
   "indent": 2,
@@ -21,6 +20,7 @@
   "smarttabs": true,
   "globals": {
     "define": false,
-    "requirejs": false
+    "requirejs": false,
+    "requestAnimationFrame": false
   }
 }
