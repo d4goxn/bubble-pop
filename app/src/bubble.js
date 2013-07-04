@@ -3,6 +3,7 @@ define(['geometry', 'linearCtrl', 'sineCtrl'], function (geometry, LinearCtrl, S
 
   function Bubble(bounds, image, onPop) {
 
+    this.id = undefined;
     this.image = image;
     this.onPop = onPop;
 

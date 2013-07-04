@@ -119,6 +119,7 @@ define(['bubble', 'promise-simple', 'jquery'], function (Bubble, Promise, $) {
 
     pop: function(bubble) {
       console.log('A bubble popped.');
+      delete this.sprites[bubble.id];
     }
   };
 
@@ -132,7 +133,7 @@ define(['bubble', 'promise-simple', 'jquery'], function (Bubble, Promise, $) {
       scene.pop(bubble);
     });
 
-    scene.add(bubble);
+    bubble.id = scene.add(bubble);
 
     bindClickHandler(function(point) {
       scene.click(point);
