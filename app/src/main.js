@@ -5,7 +5,7 @@ requirejs.config({
   }
 });
 
-define(['promise-simple', 'jquery'], function (Promise, $) {
+define(['linearCtrl', 'sineCtrl', 'promise-simple', 'jquery'], function (LinearCtrl, SineCtrl, Promise, $) {
   'use strict';
 
   var canvas = $('canvas#display')[0];
@@ -15,43 +15,8 @@ define(['promise-simple', 'jquery'], function (Promise, $) {
 
   var ctx = canvas.getContext('2d');
 
-  function now() {
-    return Date.now() * 0.001;
-  }
-
-  function LinearMotion(scale, offset) {
-
-    this.birth = now();
-    this.offset = offset;
-    this.scale = scale;
-
-  }
-
-  LinearMotion.prototype = {
-    get value() {
-      var time = now() - this.birth;
-      return this.scale * time + this.offset;
-    }
-  };
-
-  function SineMotion(range, scale, offset) {
-
-    this.birth = now();
-    this.range = range;
-    this.scale = scale;
-    this.offset = offset;
-
-  }
-
-  SineMotion.prototype = {
-    get value() {
-      var time = now() - this.birth;
-      return this.range * Math.sin(time * this.scale) + this.offset;
-    }
-  };
-
-  var bubbleRise = new LinearMotion(-5, canvas.height + 0);
-  var bubbleSwing = new SineMotion(canvas.width * 0.25, 0.25, canvas.width * 0.5);
+  var bubbleRise = new LinearCtrl(-5, canvas.height - 100);
+  var bubbleSwing = new SineCtrl(canvas.width * 0.25, 0.25, canvas.width * 0.5);
 
   var bubble = {
 
