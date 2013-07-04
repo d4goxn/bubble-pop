@@ -8,7 +8,8 @@ requirejs.config({
 define(['bubble', 'promise-simple', 'jquery'], function (Bubble, Promise, $) {
   'use strict';
 
-  var canvas = $('canvas#display')[0];
+  var $canvas = $('canvas#display');
+  var canvas = $canvas[0];
 
   canvas.width = $(window).width();
   canvas.height = $(window).height();
@@ -37,7 +38,7 @@ define(['bubble', 'promise-simple', 'jquery'], function (Bubble, Promise, $) {
 
   var running = true;
 
-  function animate(sprites) {
+  function animate(scene) {
     function loop() {
 
       if(!running) return;
@@ -45,8 +46,8 @@ define(['bubble', 'promise-simple', 'jquery'], function (Bubble, Promise, $) {
       ctx.fillStyle = '#aaf';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      for(var spriteId in sprites) {
-        var sprite = sprites[spriteId];
+      for(var spriteId in scene.sprites) {
+        var sprite = scene.sprites[spriteId];
 
         ctx.drawImage(
           sprite.image,
@@ -61,16 +62,77 @@ define(['bubble', 'promise-simple', 'jquery'], function (Bubble, Promise, $) {
     loop();
   }
 
+  // When the canvas is clicked, call the click handler with coordinates relative to the canvas.
+  function bindClickHandler(handler) {
+    var BUTTON_LEFT = 0;
+
+    $canvas.mousedown(function(event) {
+      if(event.button === BUTTON_LEFT) {
+
+        var x = event.pageX - $(this).position().left;
+        var y = event.pageY - $(this).position().top;
+
+        handler({
+          x: x,
+          y: y
+        });
+      }
+    });
+  }
+
+  // Return a unique id.
+  var nextId = (function() {
+    var currentId = 0;
+
+    return function() {
+      return ++currentId;
+    };
+  })();
+
+  function Scene() {
+
+    this.sprites = {};
+
+  }
+
+  Scene.prototype = {
+
+    add: function(sprite) {
+      var id = nextId();
+      this.sprites[id] = sprite;
+      return id;
+    },
+
+    click: function(point) {
+      for(var spriteId in this.sprites) {
+        var sprite = this.sprites[spriteId];
+
+        if(
+          sprite.intersectsPoint &&
+          sprite.intersectsPoint(point) &&
+          sprite.click
+        ) {
+          sprite.click(point);
+        }
+      }
+    }
+  };
+
   var image = new Image();
 
   // Wait for the image to load, then create the game objects and start animating.
   Promise.when(imageWaiter(image)).then(function() {
     
     var bubble = new Bubble(bounds, image);
+    var scene = new Scene();
 
-    animate({
-      0: bubble
+    scene.add(bubble);
+
+    bindClickHandler(function(point) {
+      scene.click(point);
     });
+
+    animate(scene);
   });
 
   image.src = 'images/bubble.png';
