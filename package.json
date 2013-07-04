@@ -1,6 +1,7 @@
 {
   "name": "bubble-pop",
   "dependencies": {
-    "promise-simple": "~0.1.0"
+    "promise-simple": "~0.1.0",
+    "express": "~3.3.3"
   }
 }
