@@ -1,6 +1,8 @@
 # BubblePop
 
-A simple game for kids.  By Sraemich and Dan.
+A simple game for kids, by Sraemich and Dan.
+
+Check it out at [http://bubble-pop.aws.af.cm/]
 
 ## Setup
 
