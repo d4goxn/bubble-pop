@@ -1,10 +1,11 @@
 requirejs.config({
   paths: {
-    'jquery': '../lib/jquery'
+    'jquery': '../lib/jquery',
+    'promise-simple': '../lib/promise-simple'
   }
 });
 
-define(['jquery'], function ($) {
+define(['promise-simple', 'jquery'], function (Promise, $) {
   'use strict';
 
   var canvas = $('canvas#display')[0];
@@ -14,27 +15,83 @@ define(['jquery'], function ($) {
 
   var ctx = canvas.getContext('2d');
 
+  function LinearMotion(scale, offset) {
+
+    this.birth = Date.now();
+    this.offset = offset;
+    this.scale = scale;
+
+  }
+
+  LinearMotion.prototype = {
+    get value() {
+      return this.scale * (Date.now() - this.birth) + this.offset;
+    }
+  };
+
+  var bubbleRise = new LinearMotion(-0.025, canvas.height + 25);
+
   var bubble = {
     image: new Image(),
     x: 100,
-    y: 100,
+
+    get y() { return bubbleRise.value; },
+
     width: 0,
-    height: 0
+    height: 0,
+
+    render: function(ctx) {
+
+      ctx.drawImage(
+        bubble.image,
+        bubble.x, bubble.y,
+        bubble.width, bubble.height
+      );
+
+    }
   };
 
-  bubble.image.onload = function() {
+  function waitForImage() {
 
-    console.log('loaded');
-    bubble.width = bubble.image.width;
-    bubble.height = bubble.image.height;
-    ctx.drawImage(bubble.image, bubble.x, bubble.y, bubble.width, bubble.height);
+    var deferred = Promise.defer();
 
-  };
+    bubble.image.onload = function() {
+
+      bubble.width = bubble.image.width;
+      bubble.height = bubble.image.height;
+
+
+      deferred.resolve();
+
+    };
+
+    return deferred;
+  }
 
   bubble.image.src = 'images/bubble.png';
 
 
-  ctx.fillStyle = '#aaf';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  var running = true;
+
+  function animate() {
+
+    if(!running) return;
+
+    ctx.fillStyle = '#aaf';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.drawImage(
+      bubble.image,
+      bubble.x, bubble.y,
+      bubble.width, bubble.height
+    );
+
+    requestAnimationFrame(animate);
+  }
+
+  Promise.when(waitForImage).then(function() {
+    
+    animate();
+  });
 
 });
