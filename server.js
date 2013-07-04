@@ -8,4 +8,4 @@ server.configure(function() {
   server.use(express.static(__dirname + '/app'));
 });
 
-server.listen(3000);
+server.listen(process.env.VCAP_APP_PORT || 3000);
