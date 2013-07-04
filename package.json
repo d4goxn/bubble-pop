@@ -1,0 +1,6 @@
+{
+  "name": "bubble-pop",
+  "dependencies": {
+    "promise-simple": "~0.1.0"
+  }
+}
