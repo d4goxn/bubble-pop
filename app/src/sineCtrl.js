@@ -12,8 +12,8 @@ define(['time'], function (time) {
 
   SineCtrl.prototype = {
     get value() {
-      var time = time.now() - this.birth;
-      return this.range * Math.sin(time * this.scale) + this.offset;
+      var t = time.now() - this.birth;
+      return this.range * Math.sin(t * this.scale) + this.offset;
     }
   };
 

@@ -11,8 +11,8 @@ define(['time'], function (time) {
 
   LinearCtrl.prototype = {
     get value() {
-      var time = time.now() - this.birth;
-      return this.scale * time + this.offset;
+      var t = time.now() - this.birth;
+      return this.scale * t + this.offset;
     }
   };
 
