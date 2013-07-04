@@ -1,9 +1,10 @@
 define(['geometry', 'linearCtrl', 'sineCtrl'], function (geometry, LinearCtrl, SineCtrl) {
   'use strict';
 
-  function Bubble(bounds, image) {
+  function Bubble(bounds, image, onPop) {
 
     this.image = image;
+    this.onPop = onPop;
 
     this.motion = {
       vertical: new LinearCtrl(-5, bounds.height - 100),
@@ -38,7 +39,7 @@ define(['geometry', 'linearCtrl', 'sineCtrl'], function (geometry, LinearCtrl, S
     },
 
     click: function() {
-      console.log('Pop!');
+      this.onPop(this);
     }
   };
 

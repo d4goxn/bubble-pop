@@ -115,6 +115,10 @@ define(['bubble', 'promise-simple', 'jquery'], function (Bubble, Promise, $) {
           sprite.click(point);
         }
       }
+    },
+
+    pop: function(bubble) {
+      console.log('A bubble popped.');
     }
   };
 
@@ -123,8 +127,10 @@ define(['bubble', 'promise-simple', 'jquery'], function (Bubble, Promise, $) {
   // Wait for the image to load, then create the game objects and start animating.
   Promise.when(imageWaiter(image)).then(function() {
     
-    var bubble = new Bubble(bounds, image);
     var scene = new Scene();
+    var bubble = new Bubble(bounds, image, function(bubble) {
+      scene.pop(bubble);
+    });
 
     scene.add(bubble);
 
