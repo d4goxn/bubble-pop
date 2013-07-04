@@ -1,19 +1,21 @@
 define(['time'], function (time) {
   'use strict';
 
-  function SineCtrl(range, scale, offset) {
+  function SineCtrl(amplitude, frequency, offset, phase) {
 
     this.birth = time.now();
-    this.range = range;
-    this.scale = scale;
+    this.amplitude = amplitude;
+    this.frequency = frequency;
     this.offset = offset;
+    this.phase = phase;
 
   }
 
   SineCtrl.prototype = {
     get value() {
       var t = time.now() - this.birth;
-      return this.range * Math.sin(t * this.scale) + this.offset;
+      var value = Math.sin(t * this.frequency + this.phase); // -1 to 1
+      return value * this.amplitude + this.offset;
     }
   };
 
