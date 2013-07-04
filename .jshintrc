@@ -20,6 +20,7 @@
   "trailing": true,
   "smarttabs": true,
   "globals": {
-    "define": false
+    "define": false,
+    "requirejs": false
   }
 }

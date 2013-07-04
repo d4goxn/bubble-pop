@@ -4,26 +4,37 @@ requirejs.config({
   }
 });
 
-define(['app', 'levels', 'bubble', 'jquery'], function (App, levels, bubbleFactory, $) {
+define(['jquery'], function ($) {
   'use strict';
 
-  var app = new App($('#display')[0]);
-  var Bubble = bubbleFactory(app.game, app.renderer.bounds);
+  var canvas = $('canvas#display')[0];
 
-  levels.load('level1')
-  .success(function(level) {
+  canvas.width = $(window).width();
+  canvas.height = $(window).height();
 
-    app.title = level.name;
+  var ctx = canvas.getContext('2d');
 
-    var origin = {
-      x: 100,
-      y: 100
-    };
+  var bubble = {
+    image: new Image(),
+    x: 100,
+    y: 100,
+    width: 0,
+    height: 0
+  };
 
-    var bubble = new Bubble(origin, 'images/' + level.associations[0].question.image);
-    app.game.spawn(bubble);
+  bubble.image.onload = function() {
 
-    app.game.start(app.renderer);
-  });
+    console.log('loaded');
+    bubble.width = bubble.image.width;
+    bubble.height = bubble.image.height;
+    ctx.drawImage(bubble.image, bubble.x, bubble.y, bubble.width, bubble.height);
+
+  };
+
+  bubble.image.src = 'images/bubble.png';
+
+
+  ctx.fillStyle = '#aaf';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 });
