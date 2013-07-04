@@ -34,24 +34,24 @@ define(['promise-simple', 'jquery'], function (Promise, $) {
     }
   };
 
-  function SineMotion(range, scale, phase) {
+  function SineMotion(range, scale, offset) {
 
     this.birth = now();
     this.range = range;
     this.scale = scale;
-    this.phase = phase;
+    this.offset = offset;
 
   }
 
   SineMotion.prototype = {
     get value() {
       var time = now() - this.birth;
-      return this.range * Math.sin(time * this.scale) + this.phase;
+      return this.range * Math.sin(time * this.scale) + this.offset;
     }
   };
 
   var bubbleRise = new LinearMotion(-5, canvas.height + 0);
-  var bubbleSwing = new SineMotion(100, 0.25, 0);
+  var bubbleSwing = new SineMotion(canvas.width * 0.25, 0.25, canvas.width * 0.5);
 
   var bubble = {
 
