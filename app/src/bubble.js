@@ -8,12 +8,12 @@ define(['geometry', 'linearCtrl', 'sineCtrl', 'parabolicCtrl'], function (geomet
     this.onPop = onPop;
 
     this.motion = {
-      horizontal: new SineCtrl(bounds.width * 0.25, 1, bounds.width * 0.5),
+      horizontal: new SineCtrl(bounds.width * 0.25, 0.125, bounds.width * 0.5),
 
       vertical: (function(context) {
         // Watch the value of LinearCtrl. When it reaches a limit, fire an event.
 
-        var linearCtrl = new LinearCtrl(-10, /*bounds.height -*/ 50);
+        var linearCtrl = new LinearCtrl(-15, bounds.height);
 
         return {
           get value() {
@@ -60,7 +60,8 @@ define(['geometry', 'linearCtrl', 'sineCtrl', 'parabolicCtrl'], function (geomet
     hitCeiling: function() {
       // Slow down and bounce around at the top of the screen.
 
-      this.motion.vertical = new ParabolicCtrl(-10, 0.25, 10);
+      var speed = 25;
+      this.motion.vertical = new ParabolicCtrl(-speed, 0.25, speed);
 
       /* BUG: discontinuity
       var freqMultiplier = 0.25;
