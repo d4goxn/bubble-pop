@@ -120,13 +120,16 @@ define(['bubble', 'popout', 'promise-simple', 'jquery'], function (Bubble, Popou
     pop: function(bubble) {
       delete this.sprites[bubble.id];
 
-      var position = {
-        x: bubble.x,
-        y: bubble.y
-      };
-
-      this.add(new Popout(position, popImage));
+      var context = this;
+      var popout = new Popout(bubble.center, popImage, 2, function(popout) {
+        context.expire(popout);
+      });
+      popout.id = this.add(popout);
       console.log('A bubble popped.');
+    },
+
+    expire: function(sprite) {
+      delete this.sprites[sprite.id];
     }
   };
 
