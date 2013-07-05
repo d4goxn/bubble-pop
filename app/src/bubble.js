@@ -1,4 +1,4 @@
-define(['geometry', 'linearCtrl', 'sineCtrl'], function (geometry, LinearCtrl, SineCtrl) {
+define(['geometry', 'linearCtrl', 'sineCtrl', 'parabolicCtrl'], function (geometry, LinearCtrl, SineCtrl, ParabolicCtrl) {
   'use strict';
 
   function Bubble(bounds, image, onPop) {
@@ -9,7 +9,7 @@ define(['geometry', 'linearCtrl', 'sineCtrl'], function (geometry, LinearCtrl, S
 
     this.motion = {
       vertical: new LinearCtrl(-5, bounds.height - 100),
-      horizontal: new SineCtrl(bounds.width * 0.25, 0.25, bounds.width * 0.5)
+      horizontal: new SineCtrl(bounds.width * 0.25, 0.125, bounds.width * 0.5)
     };
   }
 
@@ -41,6 +41,10 @@ define(['geometry', 'linearCtrl', 'sineCtrl'], function (geometry, LinearCtrl, S
 
     click: function() {
       this.onPop(this);
+    },
+
+    hitCeiling: function() {
+      this.motion.vertical = new ParabolicCtrl(-10, 0.25, 10);
     }
   };
 

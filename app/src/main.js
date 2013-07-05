@@ -147,6 +147,10 @@ define(['bubble', 'popout', 'promise-simple', 'jquery'], function (Bubble, Popou
       scene.pop(bubble);
     });
 
+    window.hitCeiling = function() {
+      bubble.hitCeiling();
+    };
+
     bubble.id = scene.add(bubble);
 
     bindClickHandler(function(point) {
