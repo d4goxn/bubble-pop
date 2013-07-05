@@ -12,8 +12,10 @@ define(['time'], function (time) {
 
   ParabolicCtrl.prototype = {
     get value() {
+
       var t = time.now() - this.birth;
       var value = Math.pow((t * this.frequency) % 2 - 1, 2);
+
       return this.amplitude * value + this.offset;
     }
   };

@@ -8,8 +8,21 @@ define(['geometry', 'linearCtrl', 'sineCtrl', 'parabolicCtrl'], function (geomet
     this.onPop = onPop;
 
     this.motion = {
-      vertical: new LinearCtrl(-5, bounds.height - 100),
-      horizontal: new SineCtrl(bounds.width * 0.25, 0.125, bounds.width * 0.5)
+      horizontal: new SineCtrl(bounds.width * 0.25, 1, bounds.width * 0.5),
+
+      vertical: (function(context) {
+        // Watch the value of LinearCtrl. When it reaches a limit, fire an event.
+
+        var linearCtrl = new LinearCtrl(-10, /*bounds.height -*/ 50);
+
+        return {
+          get value() {
+            var value = linearCtrl.value;
+            if(value <= 0) context.hitCeiling();
+            return value;
+          }
+        };
+      })(this)
     };
   }
 
@@ -34,6 +47,7 @@ define(['geometry', 'linearCtrl', 'sineCtrl', 'parabolicCtrl'], function (geomet
     },
 
     intersectsPoint: function(point) {
+
       var distance2 = geometry.distance2(point, this.center);
       var radius2 = Math.pow(this.radius, 2);
       return distance2 <= radius2;
@@ -44,7 +58,17 @@ define(['geometry', 'linearCtrl', 'sineCtrl', 'parabolicCtrl'], function (geomet
     },
 
     hitCeiling: function() {
+      // Slow down and bounce around at the top of the screen.
+
       this.motion.vertical = new ParabolicCtrl(-10, 0.25, 10);
+
+      /* BUG: discontinuity
+      var freqMultiplier = 0.25;
+      var phase = this.motion.horizontal.value / this.motion.horizontal.amplitude;
+
+      this.motion.horizontal.frequency *= freqMultiplier;
+      this.motion.horizontal.phase = phase;
+      */
     }
   };
 

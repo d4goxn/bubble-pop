@@ -13,8 +13,11 @@ define(['time'], function (time) {
 
   SineCtrl.prototype = {
     get value() {
+
       var t = time.now() - this.birth;
-      var value = Math.sin(t * this.frequency + this.phase); // -1 to 1
+      var phase = this.phase / this.frequency;
+      var value = Math.sin((t + phase) * this.frequency); // -1 to 1
+      
       return value * this.amplitude + this.offset;
     }
   };
