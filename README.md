@@ -2,7 +2,7 @@
 
 A simple game for kids, by Sraemech and Dan.
 
-Check it out at [http://bubble-pop.aws.af.cm/]
+Check it out at http://bubble-pop.aws.af.cm/
 
 ## Setup
 
