@@ -40,8 +40,8 @@ define(['bubble', 'popout', 'promise-simple', 'jquery'], function (Bubble, Popou
 
   ctx.rect(0, 0, canvas.width, canvas.height);
   var gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  gradient.addColorStop(0, '#53bcd9');
-  gradient.addColorStop(1, '#c1e1bc');
+  gradient.addColorStop(0, '#004CB3');
+  gradient.addColorStop(1, '#8ED6FF');
 
   function animate(scene) {
     function loop() {
