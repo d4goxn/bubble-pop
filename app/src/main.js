@@ -38,13 +38,18 @@ define(['bubble', 'popout', 'promise-simple', 'jquery'], function (Bubble, Popou
 
   var running = true;
 
+  ctx.rect(0, 0, canvas.width, canvas.height);
+  var gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+  gradient.addColorStop(0, '#8ed6ff');
+  gradient.addColorStop(1, '#004cb3');
+
   function animate(scene) {
     function loop() {
 
       if(!running) return;
 
-      ctx.fillStyle = '#aaf';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = gradient;
+      ctx.fill();
 
       for(var spriteId in scene.sprites) {
         var sprite = scene.sprites[spriteId];
