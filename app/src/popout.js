@@ -1,24 +1,27 @@
 define(function () {
-  'use strict';
+	'use strict';
 
-  function Popout(center, image, lifetime, expire) {
+	function Popout(bubble, image, lifetime, expire) {
 
-    this.id = undefined;
-    this._image = image;
-    this.x = center.x - image.width * 0.5;
-    this.y = center.y - image.height * 0.5;
+		this.id = undefined;
+		this._image = image;
+		this.x = bubble.x;
+		this.y = bubble.y;
 
-    if(expire !== undefined) {
-      setTimeout(expire, lifetime * 1000, this);
-    }
-  }
+		if(expire !== undefined) {
+			setTimeout(expire, lifetime * 1000, this);
+		}
+	}
 
-  Popout.prototype = {
-    get image() {
-      // TODO: animate opacity
-      return this._image;
-    }
-  };
+	Popout.prototype = {
+		get image() {
+			// TODO: animate opacity
+			return this._image;
+		},
 
-  return Popout;
+		get left() { return this.x - this.image.width / 2; },
+		get top() { return this.y - this.image.height / 2; }
+	};
+
+	return Popout;
 });

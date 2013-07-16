@@ -1,171 +1,171 @@
 requirejs.config({
-  paths: {
-    'jquery': '../lib/jquery',
-    'promise-simple': '../lib/promise-simple'
-  }
+	paths: {
+		'jquery': '../lib/jquery',
+		'promise-simple': '../lib/promise-simple'
+	}
 });
 
 define(['bubble', 'popout', 'promise-simple', 'jquery'], function (Bubble, Popout, Promise, $) {
-  'use strict';
+	'use strict';
 
-  var $canvas = $('canvas#display');
-  var canvas = $canvas[0];
+	var $canvas = $('canvas#display');
+	var canvas = $canvas[0];
 
-  canvas.width = $(window).width();
-  canvas.height = $(window).height();
+	canvas.width = $(window).width();
+	canvas.height = $(window).height();
 
-  var ctx = canvas.getContext('2d');
+	var ctx = canvas.getContext('2d');
 
-  var bounds = {
-    get width() { return canvas.width; },
-    get height() { return canvas.height; },
-  };
+	var bounds = {
+		get width() { return canvas.width; },
+		get height() { return canvas.height; },
+	};
 
 
-  // Returns a function that will resolve a waiting promise when an image has loaded.
-  function imageWaiter(image) {
-    return function() {
+	// Returns a function that will resolve a waiting promise when an image has loaded.
+	function imageWaiter(image) {
+		return function() {
 
-      var deferred = Promise.defer();
+			var deferred = Promise.defer();
 
-      image.onload = function() {
-        deferred.resolve();
-      };
+			image.onload = function() {
+				deferred.resolve();
+			};
 
-      return deferred;
-    };
-  }
+			return deferred;
+		};
+	}
 
-  var running = true;
+	var running = true;
 
-  ctx.rect(0, 0, canvas.width, canvas.height);
-  var gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  gradient.addColorStop(0, '#004CB3');
-  gradient.addColorStop(1, '#8ED6FF');
+	ctx.rect(0, 0, canvas.width, canvas.height);
+	var gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+	gradient.addColorStop(0, '#004CB3');
+	gradient.addColorStop(1, '#8ED6FF');
 
-  function animate(scene) {
-    function loop() {
+	function animate(scene) {
+		function loop() {
 
-      if(!running) return;
+			if(!running) return;
 
-      ctx.fillStyle = gradient;
-      ctx.fill();
+			ctx.fillStyle = gradient;
+			ctx.fill();
 
-      for(var spriteId in scene.sprites) {
-        var sprite = scene.sprites[spriteId];
+			for(var spriteId in scene.sprites) {
+				var sprite = scene.sprites[spriteId];
 
-        ctx.drawImage(
-          sprite.image,
-          sprite.x, sprite.y,
-          sprite.image.width, sprite.image.height
-        );
-      }
+				ctx.drawImage(
+					sprite.image,
+					sprite.left, sprite.top,
+					sprite.image.width, sprite.image.height
+				);
+			}
 
-      requestAnimationFrame(loop);
-    }
+			requestAnimationFrame(loop);
+		}
 
-    loop();
-  }
+		loop();
+	}
 
-  // When the canvas is clicked, call the click handler with coordinates relative to the canvas.
-  function bindClickHandler(handler) {
-    var BUTTON_LEFT = 0;
+	// When the canvas is clicked, call the click handler with coordinates relative to the canvas.
+	function bindClickHandler(handler) {
+		var BUTTON_LEFT = 0;
 
-    $canvas.mousedown(function(event) {
-      if(event.button === BUTTON_LEFT) {
+		$canvas.mousedown(function(event) {
+			if(event.button === BUTTON_LEFT) {
 
-        var x = event.pageX - $(this).position().left;
-        var y = event.pageY - $(this).position().top;
+				var x = event.pageX - $(this).position().left;
+				var y = event.pageY - $(this).position().top;
 
-        handler({
-          x: x,
-          y: y
-        });
-      }
-    });
-  }
+				handler({
+					x: x,
+					y: y
+				});
+			}
+		});
+	}
 
-  // Return a unique id.
-  var nextId = (function() {
-    var currentId = 0;
+	// Return a unique id.
+	var nextId = (function() {
+		var currentId = 0;
 
-    return function() {
-      return ++currentId;
-    };
-  })();
+		return function() {
+			return ++currentId;
+		};
+	})();
 
-  function Scene() {
+	function Scene() {
 
-    this.sprites = {};
+		this.sprites = {};
 
-  }
+	}
 
-  Scene.prototype = {
+	Scene.prototype = {
 
-    add: function(sprite) {
-      var id = nextId();
-      this.sprites[id] = sprite;
-      return id;
-    },
+		add: function(sprite) {
+			var id = nextId();
+			this.sprites[id] = sprite;
+			return id;
+		},
 
-    click: function(point) {
-      for(var spriteId in this.sprites) {
-        var sprite = this.sprites[spriteId];
+		click: function(point) {
+			for(var spriteId in this.sprites) {
+				var sprite = this.sprites[spriteId];
 
-        if(
-          sprite.intersectsPoint &&
-          sprite.intersectsPoint(point) &&
-          sprite.click
-        ) {
-          sprite.click(point);
-        }
-      }
-    },
+				if(
+					sprite.intersectsPoint &&
+						sprite.intersectsPoint(point) &&
+							sprite.click
+				) {
+					sprite.click(point);
+				}
+			}
+		},
 
-    pop: function(bubble) {
-      delete this.sprites[bubble.id];
+		pop: function(bubble) {
+			delete this.sprites[bubble.id];
 
-      var context = this;
-      var popout = new Popout(bubble.center, popImage, 2, function(popout) {
-        context.expire(popout);
-      });
-      popout.id = this.add(popout);
-      console.log('A bubble popped.');
-    },
+			var context = this;
+			var popout = new Popout(bubble, popImage, 2, function(popout) {
+				context.expire(popout);
+			});
+			popout.id = this.add(popout);
+			console.log('A bubble popped.');
+		},
 
-    expire: function(sprite) {
-      delete this.sprites[sprite.id];
-    }
-  };
+		expire: function(sprite) {
+			delete this.sprites[sprite.id];
+		}
+	};
 
-  var bubbleImage = new Image();
-  var popImage = new Image();
+	var bubbleImage = new Image();
+	var popImage = new Image();
 
-  // Wait for the image to load, then create the game objects and start animating.
-  Promise.when(
-    imageWaiter(bubbleImage),
-    imageWaiter(popImage)
-  ).then(function() {
-    
-    var scene = new Scene();
-    var bubble = new Bubble(bounds, bubbleImage, function(bubble) {
-      scene.pop(bubble);
-    });
+	// Wait for the image to load, then create the game objects and start animating.
+	Promise.when(
+		imageWaiter(bubbleImage),
+		imageWaiter(popImage)
+	).then(function() {
 
-    window.hitCeiling = function() {
-      bubble.hitCeiling();
-    };
+		var scene = new Scene();
+		var bubble = new Bubble(bounds, bubbleImage, function(bubble) {
+			scene.pop(bubble);
+		});
 
-    bubble.id = scene.add(bubble);
+		window.hitCeiling = function() {
+			bubble.hitCeiling();
+		};
 
-    bindClickHandler(function(point) {
-      scene.click(point);
-    });
+		bubble.id = scene.add(bubble);
 
-    animate(scene);
-  });
+		bindClickHandler(function(point) {
+			scene.click(point);
+		});
 
-  bubbleImage.src = 'images/bubble.png';
-  popImage.src = 'images/pop.png';
+		animate(scene);
+	});
+
+	bubbleImage.src = 'images/bubble.png';
+	popImage.src = 'images/pop.png';
 
 });
