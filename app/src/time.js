@@ -1,11 +1,11 @@
 define(function () {
-  'use strict';
+	'use strict';
 
-  var time = {
-    now: function () {
-      return Date.now() * 0.001;
-    }
-  };
+	var time = {
+		now: function () {
+			return Date.now() * 0.001;
+		}
+	};
 
-  return time;
+	return time;
 });
