@@ -124,6 +124,7 @@ define(['bubble', 'popout', 'promise-simple', 'jquery'], function (Bubble, Popou
 
 		pop: function(bubble) {
 			delete this.sprites[bubble.id];
+			delete this.sprites[bubble.follower.id];
 
 			var context = this;
 			var popout = new Popout(bubble, popImage, 2, function(popout) {
@@ -140,17 +141,24 @@ define(['bubble', 'popout', 'promise-simple', 'jquery'], function (Bubble, Popou
 
 	var bubbleImage = new Image();
 	var popImage = new Image();
+	var questionImage = new Image();
+	var answerImage = new Image();
 
 	// Wait for the image to load, then create the game objects and start animating.
 	Promise.when(
 		imageWaiter(bubbleImage),
-		imageWaiter(popImage)
+		imageWaiter(popImage),
+		imageWaiter(questionImage),
+		imageWaiter(answerImage)
 	).then(function() {
 
 		var scene = new Scene();
-		var bubble = new Bubble(bounds, bubbleImage, function(bubble) {
-			scene.pop(bubble);
-		});
+		var bubble = new Bubble(
+			scene, bounds, bubbleImage,
+			function(bubble) {
+				scene.pop(bubble);
+			}, questionImage
+		);
 
 		window.hitCeiling = function() {
 			bubble.hitCeiling();
@@ -167,5 +175,7 @@ define(['bubble', 'popout', 'promise-simple', 'jquery'], function (Bubble, Popou
 
 	bubbleImage.src = 'images/bubble.png';
 	popImage.src = 'images/pop.png';
+	questionImage.src = 'images/question.png';
+	answerImage.src = 'images/answer.png';
 
 });

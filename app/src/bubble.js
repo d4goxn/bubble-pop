@@ -1,11 +1,30 @@
 define(['geometry', 'linearCtrl', 'sineCtrl', 'parabolicCtrl'], function (geometry, LinearCtrl, SineCtrl, ParabolicCtrl) {
 	'use strict';
 
-	function Bubble(bounds, image, onPop) {
+	function Follower(image, target) {
+
+		this.id = undefined;
+		this.image = image;
+		this.target = target;
+	}
+
+	Follower.prototype = {
+		get x() { return this.target.x; },
+		get y() { return this.target.y; },
+
+		get width() { return this.image.width; },
+		get height() { return this.image.height; },
+
+		get left() { return this.x - this.width * 0.5; },
+		get top() { return this.y - this.height * 0.5; }
+	};
+
+	function Bubble(scene, bounds, image, onPop, questionImage) {
 
 		this.id = undefined;
 		this.image = image;
 		this.onPop = onPop;
+		this.follower = new Follower(questionImage, this);
 
 		this.motion = {
 			horizontal: new SineCtrl(bounds.width * 0.25, 0.125, bounds.width * 0.5),
@@ -24,6 +43,8 @@ define(['geometry', 'linearCtrl', 'sineCtrl', 'parabolicCtrl'], function (geomet
 				};
 			})(this)
 		};
+
+		this.follower.id = scene.add(this.follower);
 	}
 
 	Bubble.prototype = {
